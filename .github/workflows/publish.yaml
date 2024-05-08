@@ -20,7 +20,7 @@ jobs:
 
           MODULE_VERSION_REQUEST=1.0.1
           
-          createModuleVersionUrl=https://app.terraform.io/api/v2/organizations/$TERRAFORM_ORG_NAME/registry-modules/private/QuadCorpsTestOrg/s3-webapp/aws/versions
+          createModuleVersionUrl=https://app.terraform.io/api/v2/organizations/QuadCorpsTestOrg/registry-modules/private/QuadCorpsTestOrg/s3-webapp/aws/versions
           createModuleVersionOutput=$(curl --location $createModuleVersionUrl \
           --header 'Content-Type: application/vnd.api+json' \
           --header "Authorization: Bearer $TERRAFORM_CLOUD_TOKEN" \
