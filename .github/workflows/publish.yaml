@@ -1,0 +1,48 @@
+name: Simple Publish Module to Terraform Cloud
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Publish Terraform Private Registry
+        env:
+          TERRAFORM_CLOUD_TOKEN: ${{ secrets.TERRAFORM_CLOUD_TOKEN }}
+        run: |
+
+          TERRAFORM_ORG_NAME=QuadCorpsTestOrg
+          MODULE_VERSION_REQUEST=1.0.1
+          PROVIDER=aws
+
+
+          createModuleVersionUrl=https://app.terraform.io/api/v2/organizations/$TERRAFORM_ORG_NAME/registry-modules/private/$TERRAFORM_ORG_NAME/$MODULE_NAME/$PROVIDER/versions
+          createModuleVersionOutput=$(curl --location $createModuleVersionUrl \
+          --header 'Content-Type: application/vnd.api+json' \
+          --header "Authorization: Bearer $TERRAFORM_CLOUD_TOKEN" \
+          --data "$MODULE_VERSION_REQUEST")
+          
+          echo $createModuleVersionOutput
+          uploadURL=$(echo $createModuleVersionOutput | jq '.data.links.upload' | sed 's/"//g')
+          echo $uploadURL
+
+          pwd
+          ls -ltra
+          tar zcvf module.tar.gz *
+          ls -ltra
+
+          echo curl -v  --location $uploadURL --header "Content-Type: application/octet-stream" --request PUT --data-binary @module.tar.gz
+          curl -v  --location $uploadURL --header "Content-Type: application/octet-stream" --request PUT --data-binary @module.tar.gz
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: terraform-aws-1cd-environment/*.gz
