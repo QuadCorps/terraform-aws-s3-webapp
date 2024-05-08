@@ -24,12 +24,7 @@ jobs:
           createModuleVersionOutput=$(curl --location $createModuleVersionUrl \
           --header 'Content-Type: application/vnd.api+json' \
           --header "Authorization: Bearer $TERRAFORM_CLOUD_TOKEN" \
-          --data '"data": {
-                  "type": "registry-module-versions",
-                  "attributes": {
-                    "version": "${MODULE_VERSION}"
-                  }
-                }')
+          --data "\"data\": {\"type\": \"registry-module-versions\",\"attributes\": {\"version\": \"1.0.1\"}}")
           
           echo $createModuleVersionOutput
           uploadURL=$(echo $createModuleVersionOutput | jq '.data.links.upload' | sed 's/"//g')
