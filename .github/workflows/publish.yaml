@@ -18,12 +18,9 @@ jobs:
           TERRAFORM_CLOUD_TOKEN: ${{ secrets.TERRAFORM_CLOUD_TOKEN }}
         run: |
 
-          TERRAFORM_ORG_NAME=QuadCorpsTestOrg
           MODULE_VERSION_REQUEST=1.0.1
-          PROVIDER=aws
-
-
-          createModuleVersionUrl=https://app.terraform.io/api/v2/organizations/$TERRAFORM_ORG_NAME/registry-modules/private/$TERRAFORM_ORG_NAME/$MODULE_NAME/$PROVIDER/versions
+          
+          createModuleVersionUrl=https://app.terraform.io/api/v2/organizations/$TERRAFORM_ORG_NAME/registry-modules/private/QuadCorpsTestOrg/s3-webapp/aws/versions
           createModuleVersionOutput=$(curl --location $createModuleVersionUrl \
           --header 'Content-Type: application/vnd.api+json' \
           --header "Authorization: Bearer $TERRAFORM_CLOUD_TOKEN" \
