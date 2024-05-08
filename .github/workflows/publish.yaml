@@ -18,13 +18,18 @@ jobs:
           TERRAFORM_CLOUD_TOKEN: ${{ secrets.TERRAFORM_CLOUD_TOKEN }}
         run: |
 
-          MODULE_VERSION_REQUEST=1.0.1
+          MODULE_VERSION=1.0.1
           
           createModuleVersionUrl=https://app.terraform.io/api/v2/organizations/QuadCorpsTestOrg/registry-modules/private/QuadCorpsTestOrg/s3-webapp/aws/versions
           createModuleVersionOutput=$(curl --location $createModuleVersionUrl \
           --header 'Content-Type: application/vnd.api+json' \
           --header "Authorization: Bearer $TERRAFORM_CLOUD_TOKEN" \
-          --data "$MODULE_VERSION_REQUEST")
+          --data '"data": {
+                  "type": "registry-module-versions",
+                  "attributes": {
+                    "version": "${MODULE_VERSION}"
+                  }
+                }')
           
           echo $createModuleVersionOutput
           uploadURL=$(echo $createModuleVersionOutput | jq '.data.links.upload' | sed 's/"//g')
